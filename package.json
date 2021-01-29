@@ -1,0 +1,29 @@
+{
+  "name": "node-cron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@greenrenge/adapters": "^1.0.1",
+    "agenda": "^4.0.1",
+    "lodash": "^4.17.20",
+    "mongo": "^0.1.0",
+    "mongodb": "^3.6.3",
+    "xprs": "0.0.2-hey-thanks-for-checking-out-xprs-hope-you-liked-it.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-mocha": "^6.2.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1"
+  }
+}

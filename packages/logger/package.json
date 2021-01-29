@@ -1,0 +1,15 @@
+{
+  "name": "@greenrenge/logger",
+  "version": "2.0.0",
+  "description": "File Append when NODE_ENV is `production` or LOG_FILE = `true`",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^2.4.2",
+    "winston-daily-rotate-file": "^3.1.2"
+  }
+}
