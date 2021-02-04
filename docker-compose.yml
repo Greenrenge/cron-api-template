@@ -2,7 +2,6 @@ version: "3.7"
 
 volumes:
   database:
-    external: true
     name: agenda-db
 
 networks:
@@ -27,14 +26,10 @@ services:
     depends_on:
       - mongodb
     volumes:
-      - ./worker:/src:cached
+      - ./worker:/src/worker
+      - ./node_modules:/src/node_modules
     working_dir: /src
-    command: [
-        "sh",
-        "-c",
-        "node job-creator-api.js
-        ",
-      ]
+    command: ["node","./worker/job-creator-api.js"]
 
   job-trigger:
     image: node:12-slim
@@ -53,14 +48,10 @@ services:
       - mongodb
       - rabbitmq
     volumes:
-      - ./worker:/src:cached
+      - ./worker:/src/worker
+      - ./node_modules:/src/node_modules
     working_dir: /src
-    command: [
-        "sh",
-        "-c",
-        "node job-trigger.js
-        ",
-      ]
+    command: ["node","./worker/job-trigger.js"]
 
   job-worker:
     image: node:12-slim
@@ -77,14 +68,10 @@ services:
     depends_on:
       - rabbitmq
     volumes:
-      - ./worker:/src:cached
+      - ./worker:/src/worker
+      - ./node_modules:/src/node_modules
     working_dir: /src
-    command: [
-        "sh",
-        "-c",
-        "node job-worker.js
-        ",
-      ]
+    command: ["node","./worker/job-worker.js"]
 
   mongodb:
     image: mongo:latest
