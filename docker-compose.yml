@@ -1,0 +1,109 @@
+version: "3.7"
+
+volumes:
+  database:
+    external: true
+    name: agenda-db
+
+networks:
+  back-services:
+    external: true
+
+services:
+  job-creator-api:
+    image: node:12-slim
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGO_HOST: mongodb://mongodb:27017/agenda
+    networks:
+      default:
+      back-services:
+        aliases:
+          - job-creator-api
+    ports:
+      - 3030:3000
+    depends_on:
+      - mongodb
+    volumes:
+      - ./worker:/src:cached
+    working_dir: /src
+    command: [
+        "sh",
+        "-c",
+        "node job-creator-api.js
+        ",
+      ]
+
+  job-trigger:
+    image: node:12-slim
+    restart: always
+    environment:
+      NODE_ENV: production
+      MONGO_HOST: mongodb://mongodb:27017/agenda
+      MQ_HOST: amqp://guest:guest@rabbitmq:5672
+      TASKS: taskA,taskB
+    networks:
+      default:
+      back-services:
+        aliases:
+          - job-trigger
+    depends_on:
+      - mongodb
+      - rabbitmq
+    volumes:
+      - ./worker:/src:cached
+    working_dir: /src
+    command: [
+        "sh",
+        "-c",
+        "node job-trigger.js
+        ",
+      ]
+
+  job-worker:
+    image: node:12-slim
+    restart: always
+    environment:
+      NODE_ENV: production
+      MQ_HOST: amqp://guest:guest@rabbitmq:5672
+      TASKS: taskA,taskB
+    networks:
+      default:
+      back-services:
+        aliases:
+          - job-worker
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./worker:/src:cached
+    working_dir: /src
+    command: [
+        "sh",
+        "-c",
+        "node job-worker.js
+        ",
+      ]
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    networks:
+      default:
+      back-services:
+    # ports:
+    #   - 1030:27017
+    volumes:
+      - database:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      # - 5672:5672
+      - 15672:15672
+
+    networks:
+      default:
+      back-services:
